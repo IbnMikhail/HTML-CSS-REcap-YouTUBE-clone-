@@ -6,12 +6,17 @@ const app = express();
 
 //middleware
 app.use(express.json());
+app.use(cors({ origin: ["http://localhost:5173"] }));
+
 
 //ROUTES
 // CREATE A TODO
 app.post("/todos", async (req,res) => {
+    
     try {
-        const {task, is_completed} = req.body;  
+        const {task, is_completed} = req.body;
+        console.log(req.body);
+        
         const todos = await sql `INSERT INTO  todos (task, is_completed) VALUES (${task}, ${is_completed}) RETURNING *`;
         res.json(todos);
         console.log(todos)
@@ -28,6 +33,8 @@ app.get("/todos", async(req,res) => {
         console.error(error.message);
     }
 })
+
+
 //GET A TODO
 
 app.get("/todos/:id", async (req,res) => {
